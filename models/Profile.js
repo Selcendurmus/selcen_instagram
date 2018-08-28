@@ -18,6 +18,10 @@ const ProfileSchema = new Schema ({
     type: String
   },
 
+  location: {
+    type: String
+  },
+
   bio: {
     type: String
   },
@@ -27,7 +31,7 @@ const ProfileSchema = new Schema ({
         type: String,
       },
       mobilephone: {
-        type: Number,
+        type: String,
       },
       gender: {
         type: String,

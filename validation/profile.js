@@ -21,20 +21,20 @@ module.exports = function validateProfileInput(data) {
     errors.email = 'Email is invalid';
   }
 
-  if (Validator.isEmpty(data.email)){
-    errors.email = 'Email field is required';
-  }
+  //if (Validator.isEmpty(data.email)){
+    //errors.email = 'Email field is required';
+  //}
 
-  if (!Validator.isLength(data.mobilephone, { min: 10, max: 10 })) {
-    errors.mobilephone = '10 digit phone number is required';
-  }
-    if (Validator.isEmpty(data.mobilephone)) {
-    errors.mobilephone = 'Mobile phone field is required';
-  }
+  //if (!Validator.isLength(data.mobilephone, { min: 10, max: 10 })) {
+    //errors.mobilephone = '10 digit phone number is required';
+  //}
+    //if (Validator.isEmpty(data.mobilephone)) {
+    //errors.mobilephone = 'Mobile phone field is required';
+  //}
 
-  if (Validator.isEmpty(data.gender)) {
-    errors.gender = 'gender field is required';
-  }
+  //if (Validator.isEmpty(data.gender)) {
+    //errors.gender = 'gender field is required';
+  //}
 
 
   if (!isEmpty(data.website)) {

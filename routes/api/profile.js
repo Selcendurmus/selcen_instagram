@@ -20,7 +20,7 @@ passport.authenticate('jwt', {session: false}),
 
 
   Profile.findOne({user: req.user.id})
-    .populate('user', ['name','avatar','handle','website','bio'])
+    .populate('user', ['name','avatar'])
     .then(profile => {
       if (!profile) {
         errors.noprofile = 'There is no profile for this user';
@@ -39,7 +39,7 @@ router.get('/all', (req, res) => {
   const errors = {};
 
   Profile.find()
-    .populate('user', ['name','avatar','handle','website','bio'])
+    .populate('user', ['name','avatar'])
     .then(profiles => {
       if (!profiles) {
         errors.noprofile = 'There are no profiles';
@@ -57,15 +57,37 @@ router.get('/handle/:handle', (req,res) => {
   const errors = {};
 
   Profile.findOne({ handle: req.params.handle})
-  .populate('user', ['name','avatar','handle','website','bio'])
+  .populate('user', ['name','avatar'])
   .then(profile => {
-    if(profile) {
+    if(!profile) {
       errors.noprofile = 'There is no profile for this user';
       res.status(404).json(errors);
     }
     res.json(profile);
   })
   .catch(err => res.status(404).json(err));
+});
+
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by user ID
+// @access  Public
+
+router.get('/user/:user_id', (req, res) => {
+  const errors = {};
+
+  Profile.findOne({ user: req.params.user_id })
+    .populate('user', ['name', 'avatar'])
+    .then(profile => {
+      if (!profile) {
+        errors.noprofile = 'There is no profile for this user';
+        res.status(404).json(errors);
+      }
+
+      res.json(profile);
+    })
+    .catch(err =>
+      res.status(404).json({ profile: 'There is no profile for this user' })
+    );
 });
 
 // @route POST api/profile
@@ -87,6 +109,7 @@ passport.authenticate('jwt', {session: false}),
   profileFields.user = req.user.id;
   if (req.body.handle) profileFields.handle = req.body.handle;
   if (req.body.website) profileFields.website = req.body.website;
+  if (req.body.location) profileFields.location = req.body.location;
   if (req.body.bio) profileFields.bio = req.body.bio;
 
   //Information
@@ -125,6 +148,22 @@ passport.authenticate('jwt', {session: false}),
 }
 );
 
+// @route   DELETE api/profile
+// @desc    Delete user and profile
+// @access  Private
+router.delete(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Profile.findOneAndRemove({ user: req.user.id }).then(() => {
+      User.findOneAndRemove({ _id: req.user.id }).then(() =>
+        res.json({ success: true })
+      );
+    });
+  }
+);
 
+
+module.exports = router;
 
 module.exports = router;
